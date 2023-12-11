@@ -1,7 +1,21 @@
-import Button from "@/components/global/Button";
+"use client"
 
-const ChatInput = () => {
+import Button from "@/components/global/Button";
+import { Tmessage } from ".";
+
+const ChatInput = ({ updateMessages }: { updateMessages: React.Dispatch<React.SetStateAction<Tmessage[]>> }) => {
     const getResponse = (query: string) => {
+        const time = new Date;
+        const id = "testing" + time;
+        const newMessage: Tmessage = {
+            message: query,
+            id,
+            time: time.toString(),
+            type: "request"
+        }
+        updateMessages((previousMessage) => {
+            return [...previousMessage, newMessage]
+        })
     }
     const handleChatSubmission = (e: React.FormEvent<HTMLFormElement>) => {
         const chatInputElem = document.getElementById("chatInput");

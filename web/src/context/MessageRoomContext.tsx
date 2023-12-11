@@ -8,7 +8,17 @@ export type TMsgRoom = {
     lastMsg: string;
     lastActive: string;
     active: boolean;
+    userId: string;
+    messages: TMsg[]
 };
+
+export type TMsg = {
+    id: string;
+    message: string;
+    time: string;
+    type: "response" | "request"
+};
+
 export type TMsgRoomContext = {
     msgRooms: TMsgRoom[];
     setMsgRooms: React.Dispatch<React.SetStateAction<TMsgRoom[]>>;
@@ -22,9 +32,10 @@ export const MsgRoomContextWP = ({ children }: { children: React.ReactNode }) =>
         lastMsg: "This is the last message it will truncate after 2 lines.",
         id: "zxcbv12skdjf",
         active: false,
-        lastActive: "yesterday"
+        lastActive: "yesterday",
+        userId: "something",
+        messages: []
     }])
-
     return (
         <MsgRoomCP.Provider value={{ msgRooms, setMsgRooms }}>
             {children}
