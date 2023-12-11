@@ -18,7 +18,7 @@ const config: Config = {
         "btn-primary": "#FF9337",
         "d-txt-main": "#FFF",
         "d-txt-sec": "#ABABAB",
-        "d-side-bg": "#2C303C",
+        "d-side-bg": "#2C303B",
         "d-sec-bg": "#4B4F5D",
         "d-active-chat": "#333743",
         "d-side-actions": "#3F424A",
