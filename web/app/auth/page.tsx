@@ -9,9 +9,7 @@ import { useUserContext } from "@/context/UserContext";
 
 const AuthPage = () => {
     const { setUser } = useUserContext();
-
     const router = useRouter();
-
     const handleGoogleAuth = useGoogleLogin({
         onSuccess: (response) => {
             getUserInfoGoogle(response.access_token)

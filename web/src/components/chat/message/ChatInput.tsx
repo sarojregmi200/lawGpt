@@ -17,7 +17,6 @@ const ChatInput = () => {
         getResponse(chatQuery);
         // clearing the
         (chatInputElem as HTMLInputElement).value = ""
-
     };
     return (
         <form className="absolute h-[53px] w-[calc(100%-320px)] bottom-[28px] z-10 flex space-x-[8px] " onSubmit={handleChatSubmission}>
