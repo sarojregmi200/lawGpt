@@ -34,6 +34,5 @@ export const UserContextWP = ({ children }: { children: React.ReactNode }) => {
 export const useUserContext = (): userContext => {
     const msgRoomContext = useContext(userCP);
     if (!msgRoomContext) throw new Error("User room context cannot be used outside userContext Provider");
-
     return msgRoomContext
 }
