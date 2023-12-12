@@ -40,7 +40,6 @@ const MessageArea = ({ id }: { id: string }) => {
                                 : <GptMessage data={message_data} key={message_data.id} />
                         )
                     })
-
                 }
             </div>
             <ChatInput updateMessages={setMessages} />
