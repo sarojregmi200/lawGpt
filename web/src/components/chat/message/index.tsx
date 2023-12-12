@@ -1,7 +1,7 @@
 "use client"
 
-import GptMessage from "./MessageGpt";
-import UserMessage from "./MessageUser";
+import GptMessage from "./GptMessage";
+import UserMessage from "./UserMessage";
 import ChatInput from "./ChatInput";
 import TimeSeperator from "./TimeSeperator";
 

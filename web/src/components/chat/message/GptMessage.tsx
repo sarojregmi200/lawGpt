@@ -20,7 +20,7 @@ type MessageGptProps = {
     time: string;
 };
 
-const MessageGpt = ({ data: { message, references, time } }: { data: MessageGptProps }) => {
+const GptMessage = ({ data: { message, references, time } }: { data: MessageGptProps }) => {
     return (
         <div className="mt-0 my-[24px] w-full ">
             <div className="relative h-full">
@@ -52,4 +52,4 @@ const MessageGpt = ({ data: { message, references, time } }: { data: MessageGptP
     );
 };
 
-export default MessageGpt;
+export default GptMessage;
