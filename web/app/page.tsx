@@ -1,4 +1,3 @@
-import Button from "@/components/global/Button";
 import Image from "next/image";
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
           src={"/svg/logo.svg"}
         />
         <h1 className="font-bold text-[80px] mt-10">LAW GPT</h1>
-        <p className=" text-[24px]  ">Your companion in understanding law</p>
+        <p className=" text-[24px]">Your companion in understanding law</p>
       </div>
       <div className="flex  items-center justify-center h-[15vh] ">
         <button className="flex items-center flex-row bg-[rgba(75,79,93,0.5)] px-[40px] font-light text-sm  py-[24px] rounded-sm">
