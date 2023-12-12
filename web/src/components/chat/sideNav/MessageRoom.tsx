@@ -17,7 +17,6 @@ const MessageRoom = ({
 }: MessageRoomProps) => {
     const { message } = useParams();
     const activeStyle = message === id ? "bg-d-active-chat" : "bg-d-side-bg";
-    console.log(title)
     return (
         <Link href={`/chat/${id}`} replace scroll={false}>
             <div className={`w-full px-[28px] h-[110px] py-[16px] ${activeStyle}`}>

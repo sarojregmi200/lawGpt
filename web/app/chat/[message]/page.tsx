@@ -6,7 +6,8 @@ import React from "react";
 
 const Message = () => {
     const param = useParams();
-    return <MessageArea />;
+    const messageRoomId: string = (param.message) as string
+    return <MessageArea id={messageRoomId} />;
 };
 
 export default Message;
