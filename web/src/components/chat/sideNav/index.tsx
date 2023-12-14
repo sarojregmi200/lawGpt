@@ -17,7 +17,7 @@ const SideNav = () => {
             <div className="flex-row flex space-x-[8px] h-[53px] w-full px-[28px]">
                 <Search />
             </div>
-            <div className="flex-1 overflow-y-scroll ">
+            <div className="flex-1 overflow-y-scroll no-scrollbar">
                 {msgRooms?.map((msgRoom, index) => (
                     <MessageRoom
                         id={msgRoom.id}
