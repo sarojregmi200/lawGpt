@@ -18,7 +18,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     useEffect(() => {
         if (!user.id)
             getUserFromCookie().then((res) => {
-                console.log(res)
                 if (res instanceof Error)
                     return setStoredAuthStatus({ status: "NotAuthenticated", message: "Not Authenticated" })
                 setUser(res)
