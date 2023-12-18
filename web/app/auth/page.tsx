@@ -1,12 +1,11 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation"
 import { useUserContext } from "@/context/UserContext";
 import Image from "next/image";
 import { getAuthenticatedUserInfoGoogle } from "./getAuthenticatedUserData";
 import { setCookie } from "@/utils/cookies";
-import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 
 type TAuthStatus = {
     message: string,
@@ -14,23 +13,11 @@ type TAuthStatus = {
 }
 
 const AuthPage = () => {
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const [AuthStatus, setAuthStatus] = useState<TAuthStatus>({ message: "", type: "success" })
 
     const router = useRouter();
 
-    useEffect(() => {
-        if (user.id)
-            return router.back();
-
-        getUserFromCookie().then((res) => {
-            if (res instanceof Error)
-                return;
-
-            setUser(res)
-            router.replace("/chat")
-        });
-    }, [])
     const handleGoogleAuth = useGoogleLogin({
         onSuccess: async (response) => {
             try {
@@ -56,7 +43,7 @@ const AuthPage = () => {
 
 
     return (
-        <div className=" overflow-hidden h-[100vh] bg-d-side-bg">
+        <div className="overflow-hidden h-[100vh] bg-d-side-bg">
             <div className=" flex bg-btn-primary h-[100vh] w-[100vw] items-center  justify-center flex-col rounded-b-[24px] -mt-[15vh]">
                 <Image
                     className="object-contain h-[40vh] w-[40vh]"

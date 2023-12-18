@@ -1,5 +1,6 @@
 "use client"
 
+import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 import React, { createContext, useContext, useState } from "react";
 
 export type TUser = {
@@ -34,5 +35,6 @@ export const UserContextWP = ({ children }: { children: React.ReactNode }) => {
 export const useUserContext = (): TUserContext => {
     const userContext = useContext(userCP);
     if (!userContext) throw new Error("User context cannot be used outside userContext Provider");
+
     return userContext
 }
