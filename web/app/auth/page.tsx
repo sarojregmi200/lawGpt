@@ -46,9 +46,7 @@ const AuthPage = () => {
                     console.log("Error while setting cookie")
                 }
                 setAuthStatus(() => ({ message: "Authentication successful, Redirecting to chat", type: "success" }))
-                setTimeout(() => {
-                    router.replace("/chat")
-                }, 2000)
+                router.replace("/chat")
             }
             catch (e) {
                 setAuthStatus(() => ({ message: "Sorry, Authentication failed \n error" + e, type: "error" }))
