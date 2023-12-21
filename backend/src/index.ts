@@ -12,7 +12,10 @@ const PORT = process.env.PORT || 3003;
 app.use(cookieParser())
 
 // allowing cross origin requests
-app.use(cors({ origin: "*" }))
+app.use(cors({
+    origin: true,
+    credentials: true
+}))
 
 // adding json support for the application
 app.use(express.json())

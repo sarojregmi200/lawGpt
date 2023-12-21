@@ -44,8 +44,9 @@ export default async function authenticate(req: Request, res: Response) {
             res.cookie("accessToken",
                 accessToken,
                 {
-                    httpOnly: true,
-                    maxAge: 1000 * 86400 * 5 // 5days
+                    maxAge: 1000 * 86400 * 5, // 5days
+                    sameSite: "none",
+                    httpOnly: false,
                 })
             return res
                 .status(200)
@@ -76,8 +77,9 @@ export default async function authenticate(req: Request, res: Response) {
         res.cookie("accessToken",
             accessToken,
             {
-                httpOnly: true,
                 maxAge: 1000 * 86400 * 5, // 5 days
+                sameSite: "none",
+                httpOnly: false,
             })
 
         // sending the user

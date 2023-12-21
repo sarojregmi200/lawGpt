@@ -8,7 +8,7 @@ export const getAuthenticatedUserData = async (accessToken: string): Promise<TUs
 
         const { data } = await axios.post(URL, {
             gAccessToken: accessToken
-        });
+        }, { withCredentials: true });
 
         if (!data.user.email) return Error("Invalid Access Token")
 
