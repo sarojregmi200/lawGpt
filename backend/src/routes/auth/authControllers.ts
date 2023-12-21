@@ -1,7 +1,8 @@
+
 import { Request, Response } from "express";
-import dbConnection from "../../../utils/db";
+import dbConnection from "$/utils/db";
 import { randomUUID } from "crypto";
-import { createJwt } from "../../../utils/jwtToken";
+import { createJwt } from "$/utils/jwtToken";
 
 export type Tguser = {
     email: string,
@@ -67,13 +68,12 @@ export default async function authenticate(req: Request, res: Response) {
             ])
 
         // setting the cookies
-        res.cookie("accessToken", accessToken, { httpOnly: true })
+        res.cookie("accessToken", accessToken, { httpOnly: true, secure: true })
 
         // sending the user
         return res
             .status(201)
             .json({ msg: "User Authenticated", user: user, accessToken })
-            .cookie("accessToken", accessToken, { httpOnly: true })
 
     } catch (error) {
         console.log(error)
