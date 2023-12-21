@@ -8,7 +8,7 @@ export const getAuthenticatedUserInfoGoogle = async (accessToken: string): Promi
     try {
         const { data } = await axios.get(URL);
         if (!data.email) return Error("Invalid Access Token")
-
+        console.log(data)
         // After getting the valid email id the data should be queried in the db for further details
         return { email: data.email, name: data.name, id: data.sub, profile: data.picture }
     } catch (e) {
