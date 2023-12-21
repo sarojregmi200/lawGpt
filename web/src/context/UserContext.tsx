@@ -4,10 +4,11 @@ import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 import React, { createContext, useContext, useState } from "react";
 
 export type TUser = {
-    id: string,
+    _id: string,
     email: string,
     name: string,
-    profile: string,
+    picture: string,
+    createdAt: string,
 };
 
 export type TUserContext = {
@@ -19,10 +20,11 @@ const userCP = createContext<TUserContext | null>(null);
 
 export const UserContextWP = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<TUser>({
-        id: "",
+        _id: "",
         email: "",
         name: "",
-        profile: "",
+        picture: "",
+        createdAt: "",
     })
 
     return (

@@ -68,7 +68,7 @@ export default async function authenticate(req: Request, res: Response) {
             ])
 
         // setting the cookies
-        res.cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+        res.cookie("accessToken", { httpOnly: true, secure: true })
 
         // sending the user
         return res
