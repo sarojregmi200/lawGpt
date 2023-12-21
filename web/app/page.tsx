@@ -1,23 +1,6 @@
-"use client"
-import { useUserContext } from "@/context/UserContext";
-import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function Home() {
-    const router = useRouter()
-    const { user, setUser } = useUserContext();
-
-    useEffect(() => {
-        if (!user.id)
-            getUserFromCookie().then((res) => {
-                if (res instanceof Error)
-                    return router.push("/auth")
-                setUser(res)
-            });
-    }, [])
-
     return (
         <div className=" overflow-hidden h-[100vh] bg-d-side-bg">
             <div className=" flex bg-btn-primary h-[100vh] w-[70vw] items-center  justify-center flex-col rounded-b-[24px]">

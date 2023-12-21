@@ -4,8 +4,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation"
 import { useUserContext } from "@/context/UserContext";
 import Image from "next/image";
-import { getAuthenticatedUserInfoGoogle } from "./getAuthenticatedUserData";
-import { setCookie } from "@/utils/cookies";
+import { getAuthenticatedUserData } from "./getAuthenticatedUserData";
 
 type TAuthStatus = {
     message: string,
@@ -21,9 +20,9 @@ const AuthPage = () => {
     const handleGoogleAuth = useGoogleLogin({
         onSuccess: async (response) => {
             try {
-                const user = await getAuthenticatedUserInfoGoogle(response.access_token)
+                const user = await getAuthenticatedUserData(response.access_token)
                 if (user instanceof Error)
-                    return console.log("Unexpected error occured")
+                    throw new Error("Unexpected error occured")
 
                 // auth successfull
                 setUser(user)
@@ -51,7 +50,7 @@ const AuthPage = () => {
                 <h1 className="font-bold text-[80px] mt-10">LAW GPT</h1>
                 <p className=" text-[24px]  ">Your companion in understanding law</p>
             </div>
-            <div className="flex  items-center justify-center h-[15vh] ">
+            <div className="flex flex-col space-y-5 items-center justify-center h-[15vh] ">
                 <button className="flex items-center flex-row bg-[rgba(75,79,93,0.5)] px-[40px] font-light text-sm  py-[24px] rounded-sm"
                     onClick={(e) => {
                         handleGoogleAuth();

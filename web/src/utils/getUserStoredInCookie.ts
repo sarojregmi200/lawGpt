@@ -1,6 +1,6 @@
 import { TUser } from "@/context/UserContext"
 import { getCookie } from "./cookies"
-import { getAuthenticatedUserInfoGoogle } from "../../app/auth/getAuthenticatedUserData"
+import { getAuthenticatedUserData } from "../../app/auth/getAuthenticatedUserData"
 
 export async function getUserFromCookie(): Promise<TUser | Error> {
     try {
@@ -8,7 +8,7 @@ export async function getUserFromCookie(): Promise<TUser | Error> {
         if (accessToken instanceof Error)
             return new Error("No cookie found")
 
-        const userData = await getAuthenticatedUserInfoGoogle(accessToken)
+        const userData = await getAuthenticatedUserData(accessToken)
         if (userData instanceof Error)
             return new Error("Error while getting user data")
         return userData

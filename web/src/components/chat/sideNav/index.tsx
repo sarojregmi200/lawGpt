@@ -6,6 +6,7 @@ import MessageRoom from "./MessageRoom";
 import UserIcon from "@/components/global/UserIcon";
 import { useMsgRoomContext } from "@/context/MessageRoomContext";
 import { useUserContext } from "@/context/UserContext";
+import moment from "moment";
 
 const SideNav = () => {
     const handleThemeChange = () => { };
@@ -40,7 +41,9 @@ const SideNav = () => {
                     <UserIcon />
                     <div>
                         <h3 className="font-medium text-[18px]">{user.name}</h3>
-                        <p className="text-16 text-d-txt-sec">Jan 2024</p>
+                        <p className="text-16 text-d-txt-sec">
+                            {moment.relativeTimeThreshold("ss") && moment(user.createdAt).fromNow()}
+                        </p>
                     </div>
                 </div>
                 <Button name="theme" handleClick={handleThemeChange} />

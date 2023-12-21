@@ -41,7 +41,12 @@ export default async function authenticate(req: Request, res: Response) {
         // returning the found user upon existance
         if (rows.length >= 1) {
             const accessToken = createJwt(rows[0])
-            res.cookie("accessToken", accessToken, { httpOnly: true })
+            res.cookie("accessToken",
+                accessToken,
+                {
+                    httpOnly: true,
+                    maxAge: 1000 * 86400 * 5 // 5days
+                })
             return res
                 .status(200)
                 .json({ msg: "User Authenticated", user: rows[0] })
@@ -68,7 +73,12 @@ export default async function authenticate(req: Request, res: Response) {
             ])
 
         // setting the cookies
-        res.cookie("accessToken", { httpOnly: true, secure: true })
+        res.cookie("accessToken",
+            accessToken,
+            {
+                httpOnly: true,
+                maxAge: 1000 * 86400 * 5, // 5 days
+            })
 
         // sending the user
         return res

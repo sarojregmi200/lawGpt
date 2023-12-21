@@ -1,6 +1,5 @@
 "use client"
 
-import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 import React, { createContext, useContext, useState } from "react";
 
 export type TUser = {
