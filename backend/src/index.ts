@@ -1,7 +1,7 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import { authRouter } from "./routes";
+
 import dotenv from "dotenv";
-import { customRequest, validateJwt } from "./utils/jwtToken";
 import cookieParser from "cookie-parser";
 
 dotenv.config()
