@@ -24,14 +24,10 @@ const AuthPage = () => {
                 const user = await getAuthenticatedUserInfoGoogle(response.access_token)
                 if (user instanceof Error)
                     return console.log("Unexpected error occured")
+
                 // auth successfull
                 setUser(user)
 
-                // setting cookies
-                const cookie = setCookie("g_access_token", response.access_token)
-                if (cookie instanceof Error) {
-                    console.log("Error while setting cookie")
-                }
                 setAuthStatus(() => ({ message: "Authentication successful, Redirecting to chat", type: "success" }))
                 router.replace("/chat")
             }

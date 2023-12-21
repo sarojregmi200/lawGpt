@@ -55,7 +55,7 @@ export default async function authenticate(req: Request, res: Response) {
             createdAt: joinedDate.toISOString(),
             ...gUser
         }
-        const accessToken = createJwt(rows[0])
+        const accessToken = createJwt(user)
 
         // adding to db
         await dbConnection.query("INSERT INTO `LAW_GPT_USERS` (_id, email, picture, name, createdAt) VALUES (?, ?, ?, ?, ?)",

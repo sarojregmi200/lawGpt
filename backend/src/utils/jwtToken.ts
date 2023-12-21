@@ -40,8 +40,8 @@ export function createJwt(data: { _id: string, email: string, picture: string, n
 
         const jwtToken = jwt.sign(data, secretKey);
         return jwtToken;
-
     } catch (error) {
+        console.log(data)
         throw new Error("Something while creating jwt" + error)
     }
 }
