@@ -55,22 +55,21 @@ export default async function authenticate(req: Request, res: Response) {
         }
 
         // creating the user if not exist
-        const joinedDate = new Date;
+        const createdAt = new Date;
         const user: Tuser = {
             _id: randomUUID(),
-            createdAt: joinedDate.toISOString(),
+            createdAt: createdAt.toISOString(),
             ...gUser
         }
         const accessToken = createJwt(user)
 
         // adding to db
-        await dbConnection.query("INSERT INTO `LAW_GPT_USERS` (_id, email, picture, name, createdAt) VALUES (?, ?, ?, ?, ?)",
+        await dbConnection.query("INSERT INTO `LAW_GPT_USERS` (_id, email, picture, name) VALUES (?, ?, ?, ?)",
             [
                 user._id,
                 user.email,
                 user.picture,
                 user.name,
-                user.createdAt
             ])
 
         // setting the cookies
