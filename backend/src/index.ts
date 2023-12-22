@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import { authRouter } from "./routes";
+import { authRouter, userRouter } from "./routes";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -21,7 +21,10 @@ app.use(cors({
 app.use(express.json())
 
 // using google authentication
-app.use("/api/v1/googleAuth/", authRouter)
+app.use("/api/v1/googleAuth", authRouter)
+
+// using the users routes
+app.use("/api/v1/user", userRouter)
 
 app.listen(PORT, () => {
     console.log(`The server is up and running at port ${PORT}`)

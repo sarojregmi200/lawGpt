@@ -1,9 +1,9 @@
 "use client"
 import { useUserContext } from "@/context/UserContext";
-import { getUserFromCookie } from "@/utils/getUserStoredInCookie";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { getPersonalInfo } from "./getAuthenticatedUserData";
 
 type TStoredAuthStatus = {
     status: "Checking" | "Authenticated" | "NotAuthenticated",
@@ -17,13 +17,17 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
     useEffect(() => {
         if (!user._id)
-            getUserFromCookie().then((res) => {
+            getPersonalInfo().then((res) => {
                 if (res instanceof Error)
-                    return setStoredAuthStatus({ status: "NotAuthenticated", message: "Not Authenticated" })
+                    return setStoredAuthStatus({
+                        status: "NotAuthenticated",
+                        message: "Error occured while getting Personal Info"
+                    })
+
                 setUser(res)
                 setStoredAuthStatus({ status: "Authenticated", message: "Redirecting to chat" })
                 router.replace("/chat")
-            });
+            })
     }, [])
 
     return (
