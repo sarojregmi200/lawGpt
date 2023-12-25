@@ -24,7 +24,6 @@ export const getAuthenticatedUserData = async (accessToken: string): Promise<TUs
 export const getPersonalInfo = async (): Promise<TUser | Error> => {
     try {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
-
         if (!backendUrl) return new Error("Missing Backend Url")
 
         const reqUrl = backendUrl + "/user/me";

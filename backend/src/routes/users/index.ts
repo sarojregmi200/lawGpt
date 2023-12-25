@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { validateJwt } from "$/utils/jwtToken"
-import { getAuthenticatedUserDetails } from "./userController"
+import { getAuthenticatedUserDetails } from "./userControllers"
 
 const userRouter = Router()
 
