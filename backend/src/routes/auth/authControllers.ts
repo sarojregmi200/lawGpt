@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import dbConnection from "$/utils/db";
 import { randomUUID } from "crypto";
 import { createJwt } from "$/utils/jwtToken";
+import { RowDataPacket } from "mysql2";
 
 export type Tguser = {
     email: string,
@@ -35,12 +36,12 @@ export default async function authenticate(req: Request, res: Response) {
         if (!gUser.email) throw new Error("Invalid auth token google auth")
 
         // checking user existance
-        const [rows]: [Tuser[]] = await dbConnection.query("SELECT * FROM `LAW_GPT_USERS` WHERE email = ?",
+        const [rows] = await dbConnection.query<RowDataPacket[]>("SELECT * FROM `LAW_GPT_USERS` WHERE email = ?",
             [gUser.email])
 
         // returning the found user upon existance
         if (rows.length >= 1) {
-            const accessToken = createJwt(rows[0])
+            const accessToken = createJwt(rows[0] as Tuser)
             res.cookie("accessToken",
                 accessToken,
                 {
