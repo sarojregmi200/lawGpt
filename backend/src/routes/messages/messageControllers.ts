@@ -10,6 +10,10 @@ interface Tmessage {
     createdAt?: Date;
 }
 
+interface TmessageRoomsResponse extends RowDataPacket {
+    tableName: string
+}
+
 export const getAllMessages = async (req: Request, res: Response) => {
     try {
         const userData = res.locals.userData
@@ -19,20 +23,15 @@ export const getAllMessages = async (req: Request, res: Response) => {
         if (!roomId)
             return res.status(400).json({ msg: "No room Id provided" })
 
-        console.log(roomId)
-        interface TmessageRoomsResponse extends RowDataPacket {
-            tableName: string
-        }
-
         const [roomEntry] = await dbConnection.
             execute<TmessageRoomsResponse[]>(`SELECT tableName FROM LAW_GPT_MESSAGE_ROOMS WHERE _id = ? AND _user_id = ?`,
                 [roomId, userData._id])
 
-        console.log(roomEntry[0].tableName)
+
+        if (roomEntry.length < 1)
+            return res.status(404).json({ msg: "No tables found to get the messages" })
 
         const messageTableName = roomEntry[0]?.tableName;
-        if (!messageTableName)
-            return res.status(404).json({ msg: "No tables found to get the messages" })
 
         type TmessageResponse = Tmessage & RowDataPacket
 
@@ -61,12 +60,12 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
 
         const { roomId } = req.params;
 
-        interface TmessageRoomsResponse extends RowDataPacket {
-            tableName: string
-        }
-
         if (!roomId)
             return res.status(400).json({ msg: "No room Id provided" })
+
+        const messageFromReq: string = req.body.message;
+        if (!messageFromReq.trim())
+            res.status(400).json({ msg: "Message cannot be empty string" })
 
         const [roomEntry] = await dbConnection.
             execute<TmessageRoomsResponse[]>(`SELECT tableName FROM LAW_GPT_MESSAGE_ROOMS WHERE _id = ? AND _user_id = ?`,
@@ -76,9 +75,6 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         if (!messageTableName)
             return res.status(404).json({ msg: "No tables found to get the messages" })
 
-        const messageFromReq: string = req.body.message;
-        if (!messageFromReq.trim())
-            res.status(400).json({ msg: "Message cannot be empty string" })
 
         const messageToInsert: Tmessage = {
             _id: randomUUID(),
