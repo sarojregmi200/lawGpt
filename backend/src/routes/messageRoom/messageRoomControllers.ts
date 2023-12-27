@@ -103,13 +103,12 @@ export const createMessageRoom = async (req: Request, res: Response) => {
                   _id varchar(255) PRIMARY KEY,
                   _user_id varchar(255) ,
                   message text NOT NULL,
-                  createdAt DATETIME NOT NULL 
+                  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL 
                 );`
         )
 
         const currentTime = new Date();
         // making a entry in the rooms table for the new table
-
         const newTableEntryData = {
             _id: randomUUID(),
             _user_id: userData._id,

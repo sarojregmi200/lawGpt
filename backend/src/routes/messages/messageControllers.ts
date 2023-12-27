@@ -51,7 +51,6 @@ export const getAllMessages = async (req: Request, res: Response) => {
             error: error
         })
     }
-
 }
 
 
@@ -101,6 +100,5 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
             error: error
         })
     }
-
 }
 
