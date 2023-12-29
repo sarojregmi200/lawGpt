@@ -39,13 +39,8 @@ const SideNav = () => {
         console.log(newMessageRoom)
         setChatCreationModal(false)
 
-        // 
-        //
-        //
-        // continue <here>
-        //
-        // </here>
     }
+
     return (
         <>
             <div className="w-[20%] min-w-[400px] h-screen  overflow-hidden bg-d-side-bg flex flex-col space-y-[32px] py-[28px] ">

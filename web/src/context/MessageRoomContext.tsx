@@ -27,15 +27,7 @@ export type TMsgRoomContext = {
 const MsgRoomCP = createContext<TMsgRoomContext | null>(null);
 
 export const MsgRoomContextWP = ({ children }: { children: React.ReactNode }) => {
-    const [msgRooms, setMsgRooms] = useState<TMsgRoom[]>([{
-        title: "Something",
-        lastMsg: "This is the last message it will truncate after 2 lines.",
-        id: "zxcbv12skdjf",
-        lastActive: "yesterday",
-        country: "Nepal",
-        userId: "something",
-        messages: []
-    }])
+    const [msgRooms, setMsgRooms] = useState<TMsgRoom[]>([])
     return (
         <MsgRoomCP.Provider value={{ msgRooms, setMsgRooms }}>
             {children}

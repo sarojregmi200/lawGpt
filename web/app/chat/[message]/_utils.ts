@@ -20,7 +20,7 @@ export const createNewMsgRoomServer = async (roomName: string, country: string):
             userId: data._user_id,
             title: data.name,
             lastActive: data.lastActive,
-            lastMsg: "",
+            lastMsg: "Welcome, how can we help you?",
             messages: [],
             country: data.country
         }
