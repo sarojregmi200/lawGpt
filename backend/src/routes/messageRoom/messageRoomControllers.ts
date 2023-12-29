@@ -84,7 +84,7 @@ export const deleteAllMessageRooms = async (_: Request, res: Response) => {
 }
 
 
-export const createMessageRoom = async (_: Request, res: Response) => {
+export const createMessageRoom = async (req: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
         if (!userData || !userData._id)
@@ -95,6 +95,14 @@ export const createMessageRoom = async (_: Request, res: Response) => {
             (new Date).toISOString())
             .toString()
             .replaceAll(/[^a-zA-Z0-9]/g, "_")
+
+        const newRoomData: { name: string, country: string } = req.body.newRoomInfo;
+
+        if (!newRoomData ||
+            !newRoomData.name ||
+            !newRoomData.country
+        )
+            return res.status(400).json({ msg: "Invalid room info provided" })
 
         // creating a table 
         await dbConnection.execute(
@@ -113,10 +121,12 @@ export const createMessageRoom = async (_: Request, res: Response) => {
             _user_id: userData._id,
             lastActive: currentTime,
             tableName: newTableName,
+            name: newRoomData.name,
+            country: newRoomData.country
         }
 
         await dbConnection
-            .execute("INSERT INTO LAW_GPT_MESSAGE_ROOMS(_id, _user_id, lastActive, tableName) VALUES(?, ?, ?, ?)",
+            .execute("INSERT INTO LAW_GPT_MESSAGE_ROOMS(_id, _user_id, lastActive, tableName, name, country) VALUES(?, ?, ?, ?, ?, ?)",
                 [...Object.values(newTableEntryData)])
 
         return res.status(201).json({
