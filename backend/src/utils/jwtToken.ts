@@ -24,7 +24,7 @@ export function validateJwt(req: Request, res: Response, next: NextFunction) {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "internal server error" })
+        return res.status(500).json({ msg: "internal server error" })
     }
 }
 

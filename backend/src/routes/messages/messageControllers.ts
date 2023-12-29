@@ -44,7 +44,7 @@ export const getAllMessages = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({
+        return res.status(500).json({
             msg: "Internal server error",
             error: error
         })
@@ -62,9 +62,12 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         if (!roomId)
             return res.status(400).json({ msg: "No room Id provided" })
 
-        const messageFromReq: string = req.body.message;
+        const messageFromReq: string = req.body?.message;
+        if (!messageFromReq)
+            return res.status(400).json({ msg: "No message provided" })
+
         if (!messageFromReq.trim())
-            res.status(400).json({ msg: "Message cannot be empty string" })
+            return res.status(400).json({ msg: "Message cannot be empty string" })
 
         const [roomEntry] = await dbConnection.
             execute<TmessageRoomsResponse[]>(`SELECT tableName FROM LAW_GPT_MESSAGE_ROOMS WHERE _id = ? AND _user_id = ?`,
@@ -90,7 +93,7 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({
+        return res.status(500).json({
             msg: "Internal server error",
             error: error
         })
@@ -140,7 +143,7 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json({
+        return res.status(500).json({
             msg: "Internal server error",
             error: error
         })

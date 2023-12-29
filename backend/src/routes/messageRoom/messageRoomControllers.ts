@@ -15,17 +15,17 @@ export const getAllMessageRooms = async (_: Request, res: Response) => {
 
         if (results.length < 1) return res.status(404).json({ msg: "No tables were found" })
 
-        res.status(200).json({
+        return res.status(200).json({
             msg: `${results.length} tables were found successfully`,
             data: { rooms: results }
         })
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Internal Server Error", error: error })
+        return res.status(500).json({ msg: "Internal Server Error", error: error })
     }
 }
-export const getOneMessageRoom = async (_: Request, res: Response) => {
+export const getOneMessageRoom = async (req: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
         const { id } = req.params;
@@ -42,14 +42,14 @@ export const getOneMessageRoom = async (_: Request, res: Response) => {
 
         if (results.length < 1) return res.status(404).json({ msg: "No tables were found" })
 
-        res.status(200).json({
+        return res.status(200).json({
             msg: "Table found successfully",
             data: { rows: results }
         })
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Internal Server Error" })
+        return res.status(500).json({ msg: "Internal Server Error" })
     }
 }
 
@@ -67,20 +67,19 @@ export const deleteAllMessageRooms = async (_: Request, res: Response) => {
         if (results.length < 1) return res.status(404).json({ msg: "No tables were found" })
 
         results.forEach(async (result) => {
-            console.log(result.tableName);
             await dbConnection.execute('DELETE FROM LAW_GPT_MESSAGE_ROOMS WHERE _user_id = ?',
                 [userData._id])
             await dbConnection.execute(`DROP TABLE ${result.tableName};`);
         })
 
-        res.status(200).json({
+        return res.status(200).json({
             msg: `Delete all the tables: ${results.length} tables`,
             data: { rows: results }
         })
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Internal Server Error" })
+        return res.status(500).json({ msg: "Internal Server Error" })
     }
 }
 
@@ -120,13 +119,13 @@ export const createMessageRoom = async (_: Request, res: Response) => {
             .execute("INSERT INTO LAW_GPT_MESSAGE_ROOMS(_id, _user_id, lastActive, tableName) VALUES(?, ?, ?, ?)",
                 [...Object.values(newTableEntryData)])
 
-        res.status(201).json({
+        return res.status(201).json({
             msg: "Created a New chat Room",
             data: { tableName: newTableName }
         })
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ msg: "Internal Server Error" })
+        return res.status(500).json({ msg: "Internal Server Error" })
     }
 } 
