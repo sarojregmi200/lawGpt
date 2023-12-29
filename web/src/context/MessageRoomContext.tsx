@@ -7,8 +7,8 @@ export type TMsgRoom = {
     title: string;
     lastMsg: string;
     lastActive: string;
-    active: boolean;
     userId: string;
+    country: string;
     messages: TMsg[]
 };
 
@@ -31,8 +31,8 @@ export const MsgRoomContextWP = ({ children }: { children: React.ReactNode }) =>
         title: "Something",
         lastMsg: "This is the last message it will truncate after 2 lines.",
         id: "zxcbv12skdjf",
-        active: false,
         lastActive: "yesterday",
+        country: "Nepal",
         userId: "something",
         messages: []
     }])

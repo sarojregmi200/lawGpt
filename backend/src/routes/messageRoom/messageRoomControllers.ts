@@ -135,7 +135,6 @@ export const createMessageRoom = async (req: Request, res: Response) => {
         )
         if (insertedRoomInfo.length < 1) throw new Error("Unfortunate error occured while quering entered data")
 
-        console.log(insertedRoomInfo[0])
         return res.status(201).json({
             msg: "Created a New chat Room",
             data: insertedRoomInfo[0]

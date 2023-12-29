@@ -1,19 +1,21 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Search from "./Search";
 import Button from "@/components/global/Button";
 import MessageRoom from "./MessageRoom";
 import UserIcon from "@/components/global/UserIcon";
-import { useMsgRoomContext } from "@/context/MessageRoomContext";
+import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
 import { useUserContext } from "@/context/UserContext";
 import moment from "moment";
-import { useState } from "react";
 import Modal from "@/components/global/modal";
+import { createNewMsgRoomServer } from "../../../../app/chat/[message]/_utils";
 
 const SideNav = () => {
     const handleThemeChange = () => { };
-    const { msgRooms } = useMsgRoomContext()
+    const { msgRooms, setMsgRooms } = useMsgRoomContext()
     const { user } = useUserContext();
+    const newMessageRoomInput = useRef<HTMLInputElement | null>(null)
 
     const [chatCreationModal, setChatCreationModal] = useState<boolean>(false);
 
@@ -21,6 +23,29 @@ const SideNav = () => {
         setChatCreationModal(true)
     }
 
+    const createMessageRoom = async () => {
+        if (!newMessageRoomInput.current)
+            return
+        const messageRoomName = newMessageRoomInput.current.value;
+        const messageRoomCountry = "Nepal"
+
+        const newMessageRoom: TMsgRoom | Error = await createNewMsgRoomServer(messageRoomName, messageRoomCountry);
+
+        if (newMessageRoom instanceof Error)
+            // may be something like a toas saying user something went wrong
+            return
+
+        setMsgRooms((prev) => [...prev, newMessageRoom])
+        console.log(newMessageRoom)
+        setChatCreationModal(false)
+
+        // 
+        //
+        //
+        // continue <here>
+        //
+        // </here>
+    }
     return (
         <>
             <div className="w-[20%] min-w-[400px] h-screen  overflow-hidden bg-d-side-bg flex flex-col space-y-[32px] py-[28px] ">
@@ -59,7 +84,10 @@ const SideNav = () => {
                 </div>
             </div>
             <Modal props={{ modalState: chatCreationModal, setModelState: setChatCreationModal }}>
-                something
+                <div className="items_container bg-d-sec-bg w-[400px] h-[300px] rounded-sm">
+                    <input type="text" name="name" id="name" placeholder="Enter the name of the MessageRoom" ref={newMessageRoomInput} /> <br />
+                    <button className="p-10 bg-btn-primary text-d-sec-bg" onClick={createMessageRoom}> Create Room</button>
+                </div>
             </Modal>
         </>
     );
