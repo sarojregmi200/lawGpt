@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { Request, Response } from "express"
 import { RowDataPacket } from "mysql2";
 
-export const getAllMessageRooms = async (req: Request, res: Response) => {
+export const getAllMessageRooms = async (_: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
         if (!userData || !userData._id)
@@ -25,7 +25,7 @@ export const getAllMessageRooms = async (req: Request, res: Response) => {
         res.status(500).json({ msg: "Internal Server Error", error: error })
     }
 }
-export const getOneMessageRoom = async (req: Request, res: Response) => {
+export const getOneMessageRoom = async (_: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
         const { id } = req.params;
@@ -53,7 +53,7 @@ export const getOneMessageRoom = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteAllMessageRooms = async (req: Request, res: Response) => {
+export const deleteAllMessageRooms = async (_: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
 
@@ -85,7 +85,7 @@ export const deleteAllMessageRooms = async (req: Request, res: Response) => {
 }
 
 
-export const createMessageRoom = async (req: Request, res: Response) => {
+export const createMessageRoom = async (_: Request, res: Response) => {
     try {
         const userData = res.locals.userData;
         if (!userData || !userData._id)

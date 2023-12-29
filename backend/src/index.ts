@@ -1,5 +1,9 @@
 import express, { Express } from "express";
-import { authRouter, messageRoomRouter, userRouter } from "./routes";
+import {
+    authRouter,
+    messageRoomRouter,
+    userRouter
+} from "./routes";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
