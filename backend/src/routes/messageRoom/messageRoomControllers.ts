@@ -129,9 +129,16 @@ export const createMessageRoom = async (req: Request, res: Response) => {
             .execute("INSERT INTO LAW_GPT_MESSAGE_ROOMS(_id, _user_id, lastActive, tableName, name, country) VALUES(?, ?, ?, ?, ?, ?)",
                 [...Object.values(newTableEntryData)])
 
+        const [insertedRoomInfo] = await dbConnection.execute<RowDataPacket[]>(
+            `SElECT * FROM LAW_GPT_MESSAGE_ROOMS WHERE _user_id=? AND tableName = ?`,
+            [userData._id, newTableName]
+        )
+        if (insertedRoomInfo.length < 1) throw new Error("Unfortunate error occured while quering entered data")
+
+        console.log(insertedRoomInfo[0])
         return res.status(201).json({
             msg: "Created a New chat Room",
-            data: { tableName: newTableName }
+            data: insertedRoomInfo[0]
         })
 
     } catch (error) {
