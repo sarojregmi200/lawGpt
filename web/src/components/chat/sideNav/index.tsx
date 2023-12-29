@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Search from "./Search";
 import Button from "@/components/global/Button";
 import MessageRoom from "./MessageRoom";
@@ -9,7 +9,7 @@ import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
 import { useUserContext } from "@/context/UserContext";
 import moment from "moment";
 import Modal from "@/components/global/modal";
-import { createNewMsgRoomServer } from "../../../../app/chat/[message]/_utils";
+import { createNewMsgRoom, getAllMsgRooms } from "../../../../app/chat/[message]/_utils";
 
 const SideNav = () => {
     const handleThemeChange = () => { };
@@ -29,17 +29,27 @@ const SideNav = () => {
         const messageRoomName = newMessageRoomInput.current.value;
         const messageRoomCountry = "Nepal"
 
-        const newMessageRoom: TMsgRoom | Error = await createNewMsgRoomServer(messageRoomName, messageRoomCountry);
+        const newMessageRoom: TMsgRoom | Error = await createNewMsgRoom(messageRoomName, messageRoomCountry);
 
         if (newMessageRoom instanceof Error)
             // may be something like a toas saying user something went wrong
             return
 
         setMsgRooms((prev) => [...prev, newMessageRoom])
-        console.log(newMessageRoom)
         setChatCreationModal(false)
-
     }
+
+    useEffect(() => {
+        (async () => {
+            const allMessageRooms = await getAllMsgRooms();
+            if (allMessageRooms instanceof Error)
+                // toast or something stating there is a error
+                return
+            console.log(allMessageRooms)
+            setMsgRooms(allMessageRooms)
+        }
+        )()
+    }, [])
 
     return (
         <>

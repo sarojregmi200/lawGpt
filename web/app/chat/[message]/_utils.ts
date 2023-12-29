@@ -1,9 +1,9 @@
 import { TMsgRoom } from "@/context/MessageRoomContext"
 import axios from "axios"
 
-export const createNewMsgRoomServer = async (roomName: string, country: string): Promise<TMsgRoom | Error> => {
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+export const createNewMsgRoom = async (roomName: string, country: string): Promise<TMsgRoom | Error> => {
     try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
         if (!backendUrl) return new Error("Missing Backend Url")
 
         const reqUrl = backendUrl + "/messageRoom/create/";
@@ -28,4 +28,31 @@ export const createNewMsgRoomServer = async (roomName: string, country: string):
     } catch (e) {
         return new Error("Error occured " + e)
     }
-} 
+}
+
+export const getAllMsgRooms = async (): Promise<TMsgRoom[] | Error> => {
+    try {
+        if (!backendUrl) return new Error("Missing Backend Url")
+
+        const reqUrl = backendUrl + "/messageRoom/";
+        const { data: { data } } = await axios.get(reqUrl, { withCredentials: true });
+        const updatedRoomInfo = data?.rooms.map((item: any) => {
+            return {
+                id: item._id,
+                userId: item._user_id,
+                title: item.name,
+                lastActive: item.lastActive,
+                lastMsg: "Logic should be changed to get the last msg",
+                messages: [],
+                country: item.country
+            }
+        }
+        )
+        console.log({ rooms: data?.rooms, updatedRoomInfo })
+        return updatedRoomInfo
+    } catch (e) {
+        return new Error("Error occured " + e)
+    }
+}
+
+

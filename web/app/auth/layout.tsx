@@ -23,7 +23,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                         status: "NotAuthenticated",
                         message: "Error occured while getting Personal Info"
                     })
-                console.log(res)
                 setUser(res)
                 setStoredAuthStatus({ status: "Authenticated", message: "Redirecting to chat" })
                 router.replace("/chat")
