@@ -4,6 +4,6 @@ import dotenv from "dotenv"
 // makes the env variable avaiable
 dotenv.config()
 
-const dbConnection = createPool(process.env.DATABASE_URL || "")
+const dbConnection = createPool({ uri: process.env.DATABASE_URL || "" })
 
 export default dbConnection

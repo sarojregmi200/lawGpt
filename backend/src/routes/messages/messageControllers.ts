@@ -113,7 +113,6 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
         }
         const paginationOptions: TpaginatedOptions = req.body.paginationOptions;
 
-        console.log(paginationOptions)
 
         if (!paginationOptions?.fromId
             || !paginationOptions?.count
@@ -138,23 +137,36 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
 
         const tableName = roomEntry[0].tableName;
 
-        const paginatedSql = `
-                SELECT * FROM ? WHERE _id ${paginationOptions.direction === "forward" ? ">=" : "<="} ?,
-                SELECT COUNT(*) FROM ? WHERE _id > ? AS messages_below,
-                SELECT COUNT(*) FROM ? WHERE _id < ? AS messages_above
-        `
-        const paginatedResponse = await dbConnection.
-            execute(paginatedSql,
+        //checking the fromId existance before fetching
+        const [presence] = await dbConnection.
+            execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id =?`, [paginationOptions.fromId]);
+
+        if (!presence.length) return res.status(400).json({ msg: "Invalid fromId provided" })
+
+        // getting messages
+        const [messages] = await dbConnection.
+            execute(`SELECT * FROM ${tableName} WHERE _id ${paginationOptions.direction === "forward" ? " >= " : " <= "} ?  ORDER BY createdAt ASC LIMIT ?;`,
                 [
-                    tableName, paginationOptions.fromId,
-                    tableName, paginationOptions.fromId,
-                    tableName, paginationOptions.fromId
+                    paginationOptions.fromId,
+                    paginationOptions.count
                 ]
             )
-        console.log(paginatedResponse)
+        // generating pagination data 
+        const [pagination] = await dbConnection.
+            execute(`SELECT 
+                    count(*) as countBelow, 
+                    (SELECT count(*) FROM ${tableName} WHERE _id < ? ORDER BY createdAt ASC) as countAbove
+                    FROM ${tableName} WHERE _id > ? ORDER BY createdAt ASC`,
+                [
+                    paginationOptions.fromId,
+                    paginationOptions.fromId
+                ]
+            )
 
         return res.status(200).json({
             msg: `Fetched ${paginationOptions.count} message from ${paginationOptions.fromId} id`,
+            messages: messages,
+            pagination
         })
     } catch (error) {
         console.log(error)
