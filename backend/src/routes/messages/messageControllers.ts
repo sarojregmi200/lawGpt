@@ -90,6 +90,13 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
             execute(`INSERT INTO  ${messageTableName} (_id, _user_id, message, createdAt) VALUES (?, ?, ?, ?)`,
                 [...Object.values(messageToInsert)])
 
+        // updating the last active to the current time in the message rooms
+
+        await dbConnection.execute(`UPDATE LAW_GPT_MESSAGE_ROOMS
+                                    SET lastActive = ?
+                                   WHERE _user_id = ? AND _id = ?
+                                   `,
+            [currentTime, userData._id, roomId])
         return res.status(200).json({
             msg: "Message Inserted successfully"
         })
