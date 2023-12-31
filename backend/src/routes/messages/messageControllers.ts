@@ -102,7 +102,7 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
 }
 
 
-const getSomeMessagesPropSchema = z.union([
+const paginationOptionsSchema = z.union([
     z.object({
         fromMode: z.enum(['top', 'bottom']),
         count: z.number().default(10),
@@ -110,10 +110,10 @@ const getSomeMessagesPropSchema = z.union([
     z.object({
         fromMode: z.enum(['id']),
         direction: z.enum(["forward", "backward"]),
-        fromId: z.string()
+        fromId: z.string(),
+        count: z.number().default(10)
     })
 ]);
-
 
 
 export const getPaginatedMessage = async (req: Request, res: Response) => {
@@ -122,13 +122,9 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
         if (!userData || !userData._id) throw new Error("No user found")
 
         let { roomId } = req.params;
-        const paginationOptions: z.infer<typeof getSomeMessagesPropSchema> = req.body.paginationOptions;
-
-        //
-        //
-        // use zod for type validation
-        //
-        //
+        const paginationOptions = paginationOptionsSchema.safeParse(req.body.paginationOptions);
+        if (!paginationOptions.success)
+            return res.status(400).json({ msg: "Invalid pagination options provided" })
 
         if (!roomId)
             return res.status(400).json({ msg: "No room Id provided" })
