@@ -158,21 +158,23 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
             })
         }
 
+
         //checking the fromId existance before fetching
         const [presence] = await dbConnection.
             execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id =?`, [paginationOptions.data.fromId]);
 
         if (!presence.length) return res.status(400).json({ msg: "Invalid fromId provided" })
 
-
         // getting messages
         const [messages] = await dbConnection.
-            execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id ${paginationOptions.data.direction === "forward" ? " >= " : " <= "} ?  ORDER BY createdAt ASC LIMIT ?;`,
-                [
-                    paginationOptions.data.fromId,
-                    paginationOptions.data.count
+            execute<RowDataPacket[]>(
+                ` select  t2.message, t2.createdAt from LAW_GPT_MESSAGE_ROOM_30534506_2023_12_31T12_01_22_764Z t1, LAW_GPT_MESSAGE_ROOM_30534506_2023_12_31T12_01_22_764Z t2 where  t1.createdAt <= t2.createdAt and t1._id = '1d0efab5-2492-466e-a427-6944fea61b7a';
+               ` [
+                paginationOptions.data.fromId,
+                paginationOptions.data.count
                 ]
             )
+        console.log(messages)
         // generating pagination data 
         const [pagination] = await dbConnection.
             execute(`SELECT 
