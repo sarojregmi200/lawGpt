@@ -9,7 +9,7 @@ import {
 const messageRouter = Router();
 
 messageRouter.get("/:roomId", validateJwt, getAllMessages)
-messageRouter.get("/:roomId/paginated", validateJwt, getPaginatedMessage)
+messageRouter.post("/:roomId/paginated", validateJwt, getPaginatedMessage)
 
 messageRouter.post("/:roomId", validateJwt, addMessageToMessageRoom)
 

@@ -2,6 +2,7 @@ import dbConnection from "$/utils/db"
 import { randomUUID } from "crypto";
 import { Request, Response } from "express"
 import { RowDataPacket } from "mysql2"
+import { z } from "zod"
 
 interface Tmessage {
     _id: string;
@@ -100,30 +101,34 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
     }
 }
 
+
+const getSomeMessagesPropSchema = z.union([
+    z.object({
+        fromMode: z.enum(['top', 'bottom']),
+        count: z.number().default(10),
+    }),
+    z.object({
+        fromMode: z.enum(['id']),
+        direction: z.enum(["forward", "backward"]),
+        fromId: z.string()
+    })
+]);
+
+
+
 export const getPaginatedMessage = async (req: Request, res: Response) => {
     try {
         const userData = res.locals.userData
         if (!userData || !userData._id) throw new Error("No user found")
 
         let { roomId } = req.params;
-        type TpaginatedOptions = {
-            fromId: string,
-            count: number,
-            direction: "forward" | "backward"
-        }
-        const paginationOptions: TpaginatedOptions = req.body.paginationOptions;
+        const paginationOptions: z.infer<typeof getSomeMessagesPropSchema> = req.body.paginationOptions;
 
-
-        if (!paginationOptions?.fromId
-            || !paginationOptions?.count
-            || !paginationOptions?.direction
-            || !(
-                paginationOptions?.direction === "forward"
-                || paginationOptions?.direction === "backward"
-            )
-        )
-            return res.status(400).json({ msg: "Invalid paginationOptions." })
-
+        //
+        //
+        // use zod for type validation
+        //
+        //
 
         if (!roomId)
             return res.status(400).json({ msg: "No room Id provided" })
@@ -142,6 +147,7 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
             execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id =?`, [paginationOptions.fromId]);
 
         if (!presence.length) return res.status(400).json({ msg: "Invalid fromId provided" })
+
 
         // getting messages
         const [messages] = await dbConnection.
