@@ -36,7 +36,7 @@ export const getAllMessages = async (req: Request, res: Response) => {
         type TmessageResponse = Tmessage & RowDataPacket
 
         const [messages] = await dbConnection.
-            execute<TmessageResponse[]>(`SELECT * FROM ${messageTableName} WHERE _user_id = ?`,
+            execute<TmessageResponse[]>(`SELECT * FROM ${messageTableName} WHERE _user_id = ? order by createdAt asc`,
                 [userData._id])
 
         return res.status(200).json({
@@ -137,20 +137,40 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
             return res.status(404).json({ msg: "No message room with the given id found" })
 
         const tableName = roomEntry[0].tableName;
+        // handeling the messages for other than id from type
+        if (paginationOptions.data.fromMode !== "id") {
+            const [messagesCount] = await dbConnection.execute<RowDataPacket[]>(`SELECT count(*) as value from ${tableName}`);
+            if (!messagesCount[0].value)
+                return res.status(404).json({ msg: "No messages found" })
+
+            const [messages] = await dbConnection
+                .execute<RowDataPacket[]>(`SELECT  * FROM ${tableName}
+                                            ORDER BY createdAt ${paginationOptions.data.fromMode === "top" ? 'ASC' : "DESC"}
+                                            LIMIT ${paginationOptions.data.count}`);
+
+            return res.status(200).json({
+                msg: `Loaded ${messages.length} Messages`,
+                messages,
+                pagination: {
+                    remainingMessages:
+                        messagesCount[0].value - messages.length
+                }
+            })
+        }
 
         //checking the fromId existance before fetching
         const [presence] = await dbConnection.
-            execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id =?`, [paginationOptions.fromId]);
+            execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id =?`, [paginationOptions.data.fromId]);
 
         if (!presence.length) return res.status(400).json({ msg: "Invalid fromId provided" })
 
 
         // getting messages
         const [messages] = await dbConnection.
-            execute(`SELECT * FROM ${tableName} WHERE _id ${paginationOptions.direction === "forward" ? " >= " : " <= "} ?  ORDER BY createdAt ASC LIMIT ?;`,
+            execute<RowDataPacket[]>(`SELECT * FROM ${tableName} WHERE _id ${paginationOptions.data.direction === "forward" ? " >= " : " <= "} ?  ORDER BY createdAt ASC LIMIT ?;`,
                 [
-                    paginationOptions.fromId,
-                    paginationOptions.count
+                    paginationOptions.data.fromId,
+                    paginationOptions.data.count
                 ]
             )
         // generating pagination data 
@@ -160,14 +180,14 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
                     (SELECT count(*) FROM ${tableName} WHERE _id < ? ORDER BY createdAt ASC) as countAbove
                     FROM ${tableName} WHERE _id > ? ORDER BY createdAt ASC`,
                 [
-                    paginationOptions.fromId,
-                    paginationOptions.fromId
+                    paginationOptions.data.fromId,
+                    paginationOptions.data.fromId
                 ]
             )
 
         return res.status(200).json({
-            msg: `Fetched ${paginationOptions.count} message from ${paginationOptions.fromId} id`,
-            messages: messages,
+            msg: `Fetched ${messages.length} message from ${paginationOptions.data.fromId} id`,
+            messages,
             pagination
         })
     } catch (error) {
