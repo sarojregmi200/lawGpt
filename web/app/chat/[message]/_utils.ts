@@ -1,3 +1,4 @@
+import { Tmessage } from "@/components/chat/message"
 import { TMsg, TMsgRoom } from "@/context/MessageRoomContext"
 import axios from "axios"
 
@@ -57,43 +58,40 @@ export const getAllMsgRooms = async (): Promise<TMsgRoom[] | Error> => {
 
 type TindexFromId = {
     fromId: string,
+    direction: "forward" | "backward",
     fromMode: "id"
 }
 type TindexFromposition = {
     fromMode: "top" | "bottom"
 }
 type TgetSomeMessagesprop = {
-    direction: "forward" | "backward",
     count: number
-} & TindexFromId & TindexFromposition
+} & (TindexFromId | TindexFromposition)
 
-export const getSomeMessages = async (props: TgetSomeMessagesprop): Promise<TMsg | Error> => {
+export const getSomeMessages = async (
+    { settings, roomId }:
+        { settings?: TgetSomeMessagesprop, roomId: string }
+): Promise<Tmessage[] | Error> => {
     try {
         if (!backendUrl) return new Error("Missing Backend Url")
 
-        const reqUrl = backendUrl + "/messageRoom/";
-        const { data: { data } } = await axios.post(reqUrl,
-            JSON.stringify(props),
+        const reqUrl = backendUrl + "/messages/" + roomId;
+        const { data: { messages } } = await axios.get(reqUrl,
             { withCredentials: true }
         );
-        const updatedRoomInfo = data?.rooms.map((item: any) => {
+
+        const updatedMessages = messages.map((item: any) => {
             return {
-                id: item._id,
-                userId: item._user_id,
-                title: item.name,
-                lastActive: item.lastActive,
-                lastMsg: "Logic should be changed to get the last msg",
-                messages: [],
-                country: item.country
+                message: item?.message,
+                id: item?._id,
+                time: item?.createdAt,
+                type: "request"
             }
         }
         )
-        console.log({ rooms: data?.rooms, updatedRoomInfo })
-        return updatedRoomInfo
+        console.log(updatedMessages)
+        return updatedMessages
     } catch (e) {
         return new Error("Error occured " + e)
     }
-
-
-
 }
