@@ -78,15 +78,16 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         if (!messageTableName)
             return res.status(404).json({ msg: "No tables found to get the messages" })
 
-
+        const currentTime = new Date();
         const messageToInsert: Tmessage = {
             _id: randomUUID(),
             _user_id: userData._id,
-            message: messageFromReq
+            message: messageFromReq,
+            createdAt: currentTime
         };
 
         await dbConnection.
-            execute(`INSERT INTO  ${messageTableName} (_id, _user_id, message) VALUES (?, ?, ?)`,
+            execute(`INSERT INTO  ${messageTableName} (_id, _user_id, message, createdAt) VALUES (?, ?, ?, ?)`,
                 [...Object.values(messageToInsert)])
 
         return res.status(200).json({

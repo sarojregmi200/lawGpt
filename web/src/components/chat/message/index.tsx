@@ -31,10 +31,8 @@ const MessageArea = ({ id }: { id: string }) => {
     useEffect(() => {
         (async () => {
             const messages = await getSomeMessages({ roomId: id })
-
             if (messages instanceof Error)
                 return
-
             setMessages([...messages.reverse()])
         })()
     }, [])
@@ -50,7 +48,7 @@ const MessageArea = ({ id }: { id: string }) => {
                     );
                 })}
             </div>
-            <ChatInput updateMessages={setMessages} />
+            <ChatInput updateMessages={setMessages} roomId={id} />
         </div>
     );
 };

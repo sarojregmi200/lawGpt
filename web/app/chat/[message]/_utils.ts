@@ -95,3 +95,18 @@ export const getSomeMessages = async (
         return new Error("Error occured " + e)
     }
 }
+
+
+export const addMessageToMessageRoom = async ({ roomId, message }: { roomId: string, message: string }) => {
+    try {
+        if (!backendUrl) return new Error("Missing Backend Url")
+
+        const reqUrl = backendUrl + "/messages/" + roomId;
+        await axios.post(reqUrl, {
+            message
+        }, { withCredentials: true })
+    }
+    catch (e) {
+        return new Error("Cannot add to the db " + e)
+    }
+}

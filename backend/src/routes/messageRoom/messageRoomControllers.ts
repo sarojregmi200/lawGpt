@@ -108,9 +108,9 @@ export const createMessageRoom = async (req: Request, res: Response) => {
         await dbConnection.execute(
             `CREATE TABLE ${newTableName}( 
                   _id varchar(255) PRIMARY KEY,
-                  _user_id varchar(255) ,
+                  _user_id varchar(255) NOT NULL,
                   message text NOT NULL,
-                  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL 
+                  createdAt datetime NOT NULL 
                 );`
         )
 

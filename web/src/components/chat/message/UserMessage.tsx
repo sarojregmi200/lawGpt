@@ -12,6 +12,7 @@ const UserMessage = ({
 }: {
     data: UserMessageProps;
 }) => {
+    console.log(time)
     const { user } = useUserContext();
     return (
         <div className=" my-[24px]">
