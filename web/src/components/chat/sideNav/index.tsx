@@ -45,7 +45,6 @@ const SideNav = () => {
             if (allMessageRooms instanceof Error)
                 // toast or something stating there is a error
                 return
-            console.log(allMessageRooms)
             setMsgRooms(allMessageRooms)
         }
         )()

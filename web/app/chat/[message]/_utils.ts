@@ -49,7 +49,6 @@ export const getAllMsgRooms = async (): Promise<TMsgRoom[] | Error> => {
             }
         }
         )
-        console.log({ rooms: data?.rooms, updatedRoomInfo })
         return updatedRoomInfo
     } catch (e) {
         return new Error("Error occured " + e)
@@ -89,7 +88,6 @@ export const getSomeMessages = async (
             }
         }
         )
-        console.log(updatedMessages)
         return updatedMessages
     } catch (e) {
         return new Error("Error occured " + e)

@@ -3,6 +3,7 @@
 import Button from "@/components/global/Button";
 import { Tmessage } from ".";
 import { addMessageToMessageRoom } from "../../../../app/chat/[message]/_utils";
+import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
 
 const ChatInput = ({
     updateMessages,
@@ -11,6 +12,7 @@ const ChatInput = ({
     updateMessages: React.Dispatch<React.SetStateAction<Tmessage[]>>;
     roomId: string
 }) => {
+    const { setMsgRooms } = useMsgRoomContext();
     const getResponse = (query: string) => {
         const time = new Date();
         const id = "testing" + time;
@@ -26,6 +28,17 @@ const ChatInput = ({
 
         // sending the messages to db 
         addMessageToMessageRoom({ roomId: roomId, message: query })
+
+        const currentTime = new Date()
+        setMsgRooms((previousMsgRoom) => (
+            previousMsgRoom.map((room) => {
+                if (room.id === roomId)
+                    return { ...room, lastActive: currentTime, lastMsg: query }
+                return room
+            }))
+        )
+
+        // getting the server gpt response and updating it here
     };
 
     const handleChatSubmission = (e: React.FormEvent<HTMLFormElement>) => {
