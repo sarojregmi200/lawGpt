@@ -26,21 +26,19 @@ const MessageArea = ({ id }: { id: string }) => {
     useEffect(() => {
         (async () => {
             const messages = await getSomeMessages({ roomId: id })
-
-            console.log(messages)
             if (messages instanceof Error)
                 return
             setMessages([...messages.reverse()])
         })()
     }, [])
     return (
-        <div className="flex-1 h-screen px-[160px] relative bg-d-main-bg overflow-y-scroll">
+        <div className="flex-1 h-screen px-[160px] relative bg-d-main-bg overflow-y-scroll pb-[100px]">
             <div className="w-full  max-w-[800px] mx-auto space-y-[25px] py-25 h-full flex flex-col-reverse overflow-auto b-[106px] no-scrollbar">
                 {messages.map(({ message, gpt_response, time, references, id }) => {
                     return (
                         <div key={id}>
-                            <GptMessage data={{ message: gpt_response, time, references }} />
                             <UserMessage data={{ message, time }} />
+                            <GptMessage data={{ message: gpt_response, time, references }} />
                         </div>)
                 })}
             </div>

@@ -35,15 +35,31 @@ export const getAllMessages = async (req: Request, res: Response) => {
 
         const messageTableName = roomEntry[0]?.tableName;
 
-        type TmessageResponse = Tmessage & RowDataPacket
+        type TmessageResponse = Tmessage & RowDataPacket & {
+            reference_ids: string[]
+        }
 
         const [messages] = await dbConnection.
             execute<TmessageResponse[]>(`SELECT * FROM ${messageTableName} WHERE _user_id = ? order by createdAt asc`,
                 [userData._id])
 
+        // fetching the references
+        const updatedMessages = await Promise.all(messages.map(async (message) => {
+            type Treference = { _id: string, reference: string, reference_link: string }
+            type TreferenceResponse = Treference & RowDataPacket
+            const references: Treference[] = []
+            await Promise.all(message.reference_ids[0].split(",").map(async (reference_id: string) => {
+                const [reference] = await dbConnection.execute<TreferenceResponse[]>(`SELECT * FROM LAW_GPT_MESSAGE_REFERENCES WHERE _id = ?`,
+                    [reference_id])
+                if (reference.length < 1) return
+                references.push(reference[0])
+            }))
+            return { ...message, references }
+        }))
+
         return res.status(200).json({
             msg: `Loaded ${messages.length} messages`,
-            messages: messages
+            messages: updatedMessages
         })
     } catch (error) {
         console.log(error)
@@ -111,7 +127,7 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         //
 
         // adding the references to the reference table
-        references.forEach(async (reference) => {
+        references.map(async (reference) => {
             await dbConnection.execute(
                 `INSERT INTO LAW_GPT_MESSAGE_REFERENCES 
                 (_id, reference, reference_link) values (?,?,?)`,
@@ -231,7 +247,7 @@ export const getPaginatedMessage = async (req: Request, res: Response) => {
                 paginationOptions.data.count
                 ]
             )
-        console.log(messages)
+
         // generating pagination data 
         const [pagination] = await dbConnection.
             execute(`SELECT 

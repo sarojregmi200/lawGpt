@@ -79,7 +79,6 @@ export const getSomeMessages = async (
             { withCredentials: true }
         );
 
-        console.log(messages)
         const updatedMessages = messages.map((item: any) => {
             return {
                 message: item?.message,
@@ -102,9 +101,10 @@ export const addMessageToMessageRoom = async ({ roomId, message }: { roomId: str
         if (!backendUrl) return new Error("Missing Backend Url")
 
         const reqUrl = backendUrl + "/messages/" + roomId;
-        await axios.post(reqUrl, {
+        const { data } = await axios.post(reqUrl, {
             message
         }, { withCredentials: true })
+        return data.messages
     }
     catch (e) {
         return new Error("Cannot add to the db " + e)

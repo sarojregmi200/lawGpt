@@ -3,14 +3,12 @@ import Link from "next/link";
 import React from "react";
 import moment from "moment";
 
-const ReferenceBox = ({ index, text, reference_link }:
-    { index: number, text: string, reference_link: string }) => {
+const ReferenceBox = ({ index, text }:
+    { index: number, text: string }) => {
     return (
-        <a href={reference_link}>
-            <div className="px-[16px] py-[8px] bg-d-bot-chat-ref roxunded-[5px] inline-flex mr-[8px]">
-                {index}. {text}
-            </div>
-        </a>
+        <div className="px-[16px] py-[8px] bg-d-bot-chat-ref rounded-[5px] inline-flex mr-[8px] mt-[5px]">
+            {index}. {text}
+        </div>
     );
 };
 
@@ -47,13 +45,12 @@ const GptMessage = ({
                 <div className="bg-d-bot-chat rounded-[5px] py-[20px]  w-[calc(100%-15px)] ml-auto mt-[-15px] z-0">
                     <div className="px-[24px] ">{message}</div>
                     <div className="my-[16px] bg-gray-700 h-[.5px] "></div>
-                    <div className="px-[24px] ">
+                    <div className="px-[24px] space-y-5">
                         {!!references?.length && references.map((reference, index) => (
-                            <Link href={reference.reference_link} key={reference._id}>
+                            <Link href={reference.reference_link} key={reference._id} >
                                 <ReferenceBox
                                     index={index}
                                     text={reference.reference}
-                                    reference_link={reference.reference_link}
                                     key={index}
                                 />
                             </Link>

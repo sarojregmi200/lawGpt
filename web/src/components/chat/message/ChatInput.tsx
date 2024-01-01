@@ -15,19 +15,28 @@ const ChatInput = ({
     const { setMsgRooms } = useMsgRoomContext();
     const getResponse = (query: string) => {
         const time = new Date();
-        const id = "testing" + time;
+        const id = crypto.randomUUID();
         const newMessage: Tmessage = {
             message: query,
             id,
-            time: time.toString(),
-            type: "request",
+            time: time,
+            gpt_response: "I am thinking",
+            references: []
         };
         updateMessages((previousMessage) => {
             return [newMessage, ...previousMessage];
         });
 
         // sending the messages to db 
-        addMessageToMessageRoom({ roomId: roomId, message: query })
+        addMessageToMessageRoom({ roomId: roomId, message: query }).then(res => {
+            if (res instanceof Error)
+                // some shot or toast or something for the user
+                return
+            updateMessages((previousMessages) => {
+                const previouslyRespondedMessages = previousMessages.filter(message => message.id !== id)
+                return [res, ...previouslyRespondedMessages]
+            })
+        })
 
         const currentTime = new Date()
         setMsgRooms((previousMsgRoom) => (
