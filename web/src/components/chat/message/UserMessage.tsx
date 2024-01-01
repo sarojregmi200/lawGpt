@@ -2,10 +2,11 @@
 
 import { useUserContext } from "@/context/UserContext";
 import Image from "next/image";
-import moment from "moment";
+import timeFromNow from "@/utils/timeFromNow";
+
 type UserMessageProps = {
     message: string;
-    time: string;
+    time: Date;
 };
 const UserMessage = ({
     data: { message, time },
@@ -25,7 +26,7 @@ const UserMessage = ({
                         src={user.picture}
                     />
                     <span className="text-xs text-gray-400 mt-auto mb-[20px]">
-                        {moment.relativeTimeThreshold("ss") && moment(time).fromNow()}
+                        {timeFromNow(time)}
                     </span>
                 </div>
                 <div className="bg-d-active-chat rounded-[5px] p-[24px]  w-[calc(100%-15px)] mt-[-15px] ml-auto z-0">

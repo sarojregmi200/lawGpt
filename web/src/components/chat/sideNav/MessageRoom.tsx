@@ -2,12 +2,13 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 import moment from "moment";
+import timeFromNow from "@/utils/timeFromNow";
 
 type MessageRoomProps = {
     id: string;
     title: string;
     lastMessage: string;
-    lastActive: string;
+    lastActive: Date;
 };
 
 const MessageRoom = ({
@@ -24,7 +25,7 @@ const MessageRoom = ({
             <div className={`w-full px-[28px] h-[110px] py-[16px] ${activeStyle}`}>
                 <div className="flex flex-row justify-between align-bottom">
                     <h3 className="flex-1 font-bold text-[18px]">{title}</h3>
-                    <div className="text-[12px] text-d-txt-sec">{moment(lastActive).fromNow()}</div>
+                    <div className="text-[12px] text-d-txt-sec">{timeFromNow(lastActive)}</div>
                 </div>
                 <p className="mt-[5px] text-d-txt-sec  line-clamp-2 ">{lastMessage}</p>
             </div>
