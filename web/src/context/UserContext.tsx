@@ -7,7 +7,7 @@ export type TUser = {
     email: string,
     name: string,
     picture: string,
-    createdAt: string,
+    createdAt: Date,
 };
 
 export type TUserContext = {
@@ -23,7 +23,7 @@ export const UserContextWP = ({ children }: { children: React.ReactNode }) => {
         email: "",
         name: "",
         picture: "",
-        createdAt: "",
+        createdAt: new Date(),
     })
 
     return (

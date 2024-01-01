@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Search from "./Search";
 import Button from "@/components/global/Button";
 import MessageRoom from "./MessageRoom";
 import UserIcon from "@/components/global/UserIcon";
 import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
 import { useUserContext } from "@/context/UserContext";
-import moment from "moment";
 import Modal from "@/components/global/Modal";
 import { createNewMsgRoom, getAllMsgRooms } from "../../../../app/chat/[message]/_utils";
+import timeFromNow from "@/utils/timeFromNow";
 
 const SideNav = () => {
     const handleThemeChange = () => { };
@@ -23,7 +23,9 @@ const SideNav = () => {
         setChatCreationModal(true)
     }
 
-    const createMessageRoom = async () => {
+    const createMessageRoom = async (e: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation(); // prevents resubmission untill this is complete
         if (!newMessageRoomInput.current)
             return
         const messageRoomName = newMessageRoomInput.current.value;
@@ -81,7 +83,7 @@ const SideNav = () => {
                         <div>
                             <h3 className="font-medium text-[18px]">{user.name}</h3>
                             <p className="text-16 text-d-txt-sec">
-                                {moment.relativeTimeThreshold("ss") && moment(user.createdAt).fromNow()}
+                                {timeFromNow(user.createdAt)}
                             </p>
                         </div>
                     </div>
@@ -89,7 +91,9 @@ const SideNav = () => {
                 </div>
             </div>
             <Modal props={{ modalState: chatCreationModal, setModelState: setChatCreationModal }}>
-                <div className="items_container bg-d-side-bg w-[500px] h-[320px] rounded-sm p-[20px] space-y-5">
+                <form className="items_container bg-d-side-bg w-[500px] h-[320px] rounded-sm p-[20px] space-y-5"
+                    onSubmit={createMessageRoom}
+                >
                     <div className="country_container space-y-2 w-full">
                         <h1 className="uppercase text-white">
                             Select A country
@@ -101,6 +105,7 @@ const SideNav = () => {
                             placeholder="Which country should I focus"
                             ref={newMessageRoomInput}
                             className="w-full rounded-[5px] bg-d-sec-bg px-3 py-2"
+                            required
                         />
                     </div>
                     <div className="name_container space-y-2 w-full">
@@ -114,14 +119,17 @@ const SideNav = () => {
                             placeholder="Nepal's law on crypto"
                             ref={newMessageRoomInput}
                             className="w-full rounded-[5px] bg-d-sec-bg px-3 py-2"
+                            required
                         />
                     </div>
                     <button
                         className="px-3 py-2 max-w-[200px] rounded-sm bg-btn-primary text-d-sec-bg w-full font-medium"
-                        onClick={createMessageRoom}>
+                        onSubmit={createMessageRoom}
+                        type="submit"
+                    >
                         Create Room
                     </button>
-                </div>
+                </form>
             </Modal>
         </>
     );

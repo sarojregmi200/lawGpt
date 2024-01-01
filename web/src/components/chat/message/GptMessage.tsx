@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import moment from "moment";
+import timeFromNow from "@/utils/timeFromNow";
 
 const ReferenceBox = ({ index, text }:
     { index: number, text: string }) => {
@@ -39,7 +40,7 @@ const GptMessage = ({
                         src={"/svg/gptIcon.svg"}
                     />
                     <span className=" text-xs text-gray-400 mt-auto mb-[20px]">
-                        {moment(time).fromNow()}
+                        {timeFromNow(time)}
                     </span>
                 </div>
                 <div className="bg-d-bot-chat rounded-[5px] py-[20px]  w-[calc(100%-15px)] ml-auto mt-[-15px] z-0">
