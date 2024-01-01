@@ -6,7 +6,7 @@ export type TMsgRoom = {
     id: string;
     title: string;
     lastMsg: string;
-    lastActive: string;
+    lastActive: Date;
     userId: string;
     country: string;
     messages: TMsg[]
