@@ -79,13 +79,15 @@ export const getSomeMessages = async (
             { withCredentials: true }
         );
 
+        console.log(messages)
         const updatedMessages = messages.map((item: any) => {
             return {
                 message: item?.message,
                 id: item?._id,
                 time: item?.createdAt,
-                type: "request"
-            }
+                gpt_response: item?.gpt_response,
+                references: item?.references
+            } as Tmessage
         }
         )
         return updatedMessages

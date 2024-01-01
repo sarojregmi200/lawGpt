@@ -147,7 +147,7 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             msg: "Message Inserted successfully",
-            messages: messageToInsert
+            messages: { ...messageToInsert, references }
         })
     } catch (error) {
         console.log(error)
