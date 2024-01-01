@@ -2,13 +2,15 @@ import dbConnection from "$/utils/db"
 import { randomUUID } from "crypto";
 import { Request, Response } from "express"
 import { RowDataPacket } from "mysql2"
-import { z } from "zod"
+import { object, z } from "zod"
 
 interface Tmessage {
     _id: string;
     _user_id: string;
     message: string;
     createdAt?: Date;
+    references_ids: string,
+    gpt_response: string,
 }
 
 interface TmessageRoomsResponse extends RowDataPacket {
@@ -78,27 +80,74 @@ export const addMessageToMessageRoom = async (req: Request, res: Response) => {
         if (!messageTableName)
             return res.status(404).json({ msg: "No tables found to get the messages" })
 
+        //
+        //
+        //
+        //
+        //TODO: AI portion
+        //
+        //
+        // getting the gpt response and updating it.
+        const gpt_response = "Yooo! man thank you for asking me I am very happy that you did, it will help me learn more and help you are well. GG pal!!!! fsociety."
+        type Treferences = {
+            _id: string,
+            reference: string, // text of the reference
+            reference_link: string,
+        }
+
+        //this is given by the ai 
+        const references: Treferences[] = [{
+            _id: randomUUID(),
+            reference: "Yeah according to random uri??",
+            reference_link: "https://github.com/sarojregmi200/lawgpt"
+        },
+        {
+            _id: randomUUID(),
+            reference: "Yeah according to random uri??",
+            reference_link: "https://github.com/sarojregmi200/lawgpt"
+        }]
+
+        // TODO: AI PORTION END
+        //
+
+        // adding the references to the reference table
+        references.forEach(async (reference) => {
+            await dbConnection.execute(
+                `INSERT INTO LAW_GPT_MESSAGE_REFERENCES 
+                (_id, reference, reference_link) values (?,?,?)`,
+                [...Object.values(reference)]
+            )
+        })
+
         const currentTime = new Date();
         const messageToInsert: Tmessage = {
             _id: randomUUID(),
             _user_id: userData._id,
             message: messageFromReq,
-            createdAt: currentTime
+            createdAt: currentTime,
+            gpt_response,
+            references_ids: (references
+                .map((reference) => reference._id))
+                .join(","),
         };
 
         await dbConnection.
-            execute(`INSERT INTO  ${messageTableName} (_id, _user_id, message, createdAt) VALUES (?, ?, ?, ?)`,
+            execute(`INSERT INTO  ${messageTableName}
+                    (_id, _user_id, message, createdAt, gpt_response, reference_ids)
+                    VALUES (?, ?, ?, ?, ? , JSON_ARRAY(?))`,
                 [...Object.values(messageToInsert)])
 
-        // updating the last active to the current time in the message rooms
-
+        // updating the last active msg
         await dbConnection.execute(`UPDATE LAW_GPT_MESSAGE_ROOMS
                                     SET lastActive = ?
                                    WHERE _user_id = ? AND _id = ?
                                    `,
             [currentTime, userData._id, roomId])
+
+
         return res.status(200).json({
-            msg: "Message Inserted successfully"
+            msg: "Message Inserted successfully",
+            messages: messageToInsert
         })
     } catch (error) {
         console.log(error)

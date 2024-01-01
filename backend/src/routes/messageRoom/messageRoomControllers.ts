@@ -124,7 +124,9 @@ export const createMessageRoom = async (req: Request, res: Response) => {
                   _id varchar(255) PRIMARY KEY,
                   _user_id varchar(255) NOT NULL,
                   message text NOT NULL,
-                  createdAt datetime NOT NULL 
+                  createdAt datetime NOT NULL,
+                  gpt_response text NOT NULL,
+                  reference_ids json NOT NULL
                 );`
         )
 
