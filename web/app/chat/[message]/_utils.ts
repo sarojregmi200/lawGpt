@@ -43,8 +43,8 @@ export const getAllMsgRooms = async (): Promise<TMsgRoom[] | Error> => {
                 userId: item._user_id,
                 title: item.name,
                 lastActive: item.lastActive,
-                lastMsg: "Logic should be changed to get the last msg",
-                messages: [],
+                lastMsg: item.lastMsg,
+                messages: item.prefetchedMessages,
                 country: item.country
             }
         }

@@ -13,11 +13,25 @@ export const getAllMessageRooms = async (_: Request, res: Response) => {
             [userData._id],
         )
 
-        if (results.length < 1) return res.status(404).json({ msg: "No tables were found" })
+        if (results.length < 1) return res.status(404).json({ msg: "No chat history was found" })
+
+        // stream the rooms
+        const updatedResult = await Promise.all(results.map(async (room) => {
+
+            const tableName = room.tableName;
+            const [messages] = await dbConnection.execute<RowDataPacket[]>(`SELECT * from ${tableName} WHERE _user_id = ? ORDER BY createdAt DESC LIMIT 20`,
+                [userData._id])
+
+            if (messages.length < 1) return { ...room, lastMsg: "How can I help you ?", prefetchedMessages: [] }
+
+            const lastMsg = messages[0].message
+            return { ...room, lastMsg, prefetchedMessages: messages }
+        }))
+
 
         return res.status(200).json({
             msg: `${results.length} tables were found successfully`,
-            data: { rooms: results }
+            data: { rooms: updatedResult }
         })
 
     } catch (error) {
@@ -44,7 +58,7 @@ export const getOneMessageRoom = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             msg: "Table found successfully",
-            data: { rows: results }
+            data: { room: results }
         })
 
     } catch (error) {
