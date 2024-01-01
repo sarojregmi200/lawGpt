@@ -3,7 +3,7 @@
 import Button from "@/components/global/Button";
 import { Tmessage } from ".";
 import { addMessageToMessageRoom } from "../../../../app/chat/[message]/_utils";
-import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
+import { useMsgRoomContext } from "@/context/MessageRoomContext";
 
 const ChatInput = ({
     updateMessages,

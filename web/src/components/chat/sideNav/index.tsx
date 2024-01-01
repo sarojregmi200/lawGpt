@@ -8,7 +8,7 @@ import UserIcon from "@/components/global/UserIcon";
 import { TMsgRoom, useMsgRoomContext } from "@/context/MessageRoomContext";
 import { useUserContext } from "@/context/UserContext";
 import moment from "moment";
-import Modal from "@/components/global/modal";
+import Modal from "@/components/global/Modal";
 import { createNewMsgRoom, getAllMsgRooms } from "../../../../app/chat/[message]/_utils";
 
 const SideNav = () => {
@@ -88,8 +88,14 @@ const SideNav = () => {
                 </div>
             </div>
             <Modal props={{ modalState: chatCreationModal, setModelState: setChatCreationModal }}>
-                <div className="items_container bg-d-sec-bg w-[400px] h-[300px] rounded-sm">
-                    <input type="text" name="name" id="name" placeholder="Enter the name of the MessageRoom" ref={newMessageRoomInput} /> <br />
+                <div className="items_container bg-d-sec-bg w-[500px] h-[320px] rounded-sm">
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="Enter the name of the MessageRoom"
+                        ref={newMessageRoomInput} />
+                    <br />
                     <button className="p-10 bg-btn-primary text-d-sec-bg" onClick={createMessageRoom}> Create Room</button>
                 </div>
             </Modal>
