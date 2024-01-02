@@ -46,12 +46,11 @@ export default async function authenticate(req: Request, res: Response) {
                 {
                     maxAge: 1000 * 86400 * 5, // 5days
                     sameSite: "none",
-                    httpOnly: false,
+                    httpOnly: true,
                 })
             return res
                 .status(200)
                 .json({ msg: "User Authenticated", user: rows[0] })
-
         }
 
         // creating the user if not exist
