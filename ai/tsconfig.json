@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,    
     "strict": true,                             
     "skipLibCheck": true,
-
+    "resolveJsonModule": true,
     // creating a alias for src dir
     "baseUrl": "src",
     "paths": {
