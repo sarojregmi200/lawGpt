@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import * as fileEntries from "./data/fileEntries.json"
-import { PipelineType, pipeline } from "@xenova/transformers";
+import { pipeline } from "@xenova/transformers";
+import { sql } from "./db";
 
 type TfileEntries = {
     fileName: string,
@@ -18,21 +19,13 @@ async function main() {
             "xenova/all-MiniLM-L6-v2"
         )
 
-        const text = "some random text"
-        const anotherText = "some random text"
+        const test = await sql`select 1 as one, 2 as two where 1=1;`
 
-        const emb1 = await generateEmbedding(text, {
-            pooling: 'mean',
-            normalize: true
-        })
+        console.log(test)
 
-        const emb2 = await generateEmbedding(anotherText, {
-            pooling: 'mean',
-            normalize: true
-        })
-        console.log(emb1, emb2)
-
+        console.log(generateEmbedding)
         let referenceFile: TfileEntries = fileEntries;
+
     } catch (error) {
         console.error("unexpected error occured", error)
     }
