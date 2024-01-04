@@ -2,30 +2,34 @@ import { config } from "dotenv";
 import * as fileEntries from "./data/fileEntries.json"
 import { pipeline } from "@xenova/transformers";
 import { sql } from "./db";
+import { convertFileToArray } from "./convertFileToArray";
 
-type TfileEntries = {
-    fileName: string,
-    country: string,
-    filePath: string
-}[]
-
+export type TprocessedFile = {
+    line: number,
+    text: string,
+    page: number,
+}
 async function main() {
     try {
         // configuring the dotenv
         config();
 
+        // setting pipeline for generateEmbedding
         const generateEmbedding = await pipeline(
             "feature-extraction",
             "xenova/all-MiniLM-L6-v2"
         )
 
-        const test = await sql`select 1 as one, 2 as two where 1=1;`
+        for (let index = 0; index < fileEntries.length; index++) {
+            const file = fileEntries[index];
 
-        console.log(test)
+            const fileInArray: TprocessedFile[] = convertFileToArray({
+                chunkFormat: "line",
+                fileLocation: __dirname + "/data/" + file.filePath
+            })
+            // generate chunks in array
 
-        console.log(generateEmbedding)
-        let referenceFile: TfileEntries = fileEntries;
-
+        }
     } catch (error) {
         console.error("unexpected error occured", error)
     }
