@@ -3,8 +3,8 @@ import fs from "fs/promises"
 import pdfParser from 'fork-pdf-parse-with-pagepertext'
 
 export const convertFileToArray = async (
-    { chunkFormat, fileLocation }
-        : { chunkFormat: "page" | "line", fileLocation: string }
+    { fileLocation }
+        : { fileLocation: string }
 ): Promise<TprocessedFile[] | Error> => {
     try {
         const pdfBuffer = await fs.readFile(fileLocation)
@@ -13,16 +13,12 @@ export const convertFileToArray = async (
         const chunkedFile: TprocessedFile[] = [];
         pdfData.textPerPage.map((page:
             { page: number, text: string }) => {
-            page.text.split("\n").map((lineData, lineNumber) => {
-                chunkedFile.push({
-                    line: lineNumber,
-                    text: lineData,
-                    pageNumber: page.page,
-                    pageData: page.text.split("\n").join(" ")
-                })
+
+            chunkedFile.push({
+                pageNumber: page.page,
+                pageData: page.text.split("\n").join(" ")
             })
         })
-
         return chunkedFile
     }
     catch (e) {

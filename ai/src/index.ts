@@ -5,11 +5,10 @@ import { sql } from "./db";
 import { convertFileToArray } from "./convertFileToArray";
 
 export type TprocessedFile = {
-    line: number,
-    text: string,
     pageNumber: number,
     pageData: string,
 }
+
 async function main() {
     try {
         // configuring the dotenv
@@ -25,14 +24,13 @@ async function main() {
             const file = fileEntries[index];
 
             const fileInArray: TprocessedFile[] | Error = await convertFileToArray({
-                chunkFormat: "line",
                 fileLocation: __dirname + "/data/" + file.filePath
             })
             // generate chunks in array
             if (fileInArray instanceof Error)
                 throw new Error(fileInArray.message)
 
-            console.log(fileInArray.length)
+
         }
 
     } catch (error) {
