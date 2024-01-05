@@ -7,7 +7,8 @@ import { convertFileToArray } from "./convertFileToArray";
 export type TprocessedFile = {
     line: number,
     text: string,
-    page: number,
+    pageNumber: number,
+    pageData: string,
 }
 async function main() {
     try {
@@ -23,13 +24,17 @@ async function main() {
         for (let index = 0; index < fileEntries.length; index++) {
             const file = fileEntries[index];
 
-            const fileInArray: TprocessedFile[] = convertFileToArray({
+            const fileInArray: TprocessedFile[] | Error = await convertFileToArray({
                 chunkFormat: "line",
                 fileLocation: __dirname + "/data/" + file.filePath
             })
             // generate chunks in array
+            if (fileInArray instanceof Error)
+                throw new Error(fileInArray.message)
 
+            console.log(fileInArray.length)
         }
+
     } catch (error) {
         console.error("unexpected error occured", error)
     }

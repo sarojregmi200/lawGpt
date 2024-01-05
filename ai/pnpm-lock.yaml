@@ -11,9 +11,9 @@ dependencies:
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
-  pdf-parse:
-    specifier: ^1.1.1
-    version: 1.1.1
+  fork-pdf-parse-with-pagepertext:
+    specifier: ^1.1.2
+    version: 1.1.2
   postgres:
     specifier: ^3.4.3
     version: 3.4.3
@@ -441,6 +441,16 @@ packages:
     resolution: {integrity: sha512-c7CZADjRcl6j0PlvFy0ZqXQ67qSEZfrVPynmnL+2zPc+NtMvrF8Y0QceMo7QqnSPc7+uWjUIAbvCQ5WIKlMVdQ==}
     dev: false
 
+  /fork-pdf-parse-with-pagepertext@1.1.2:
+    resolution: {integrity: sha512-zzDSz0ItjAdw8V9/W0TsZpDilMcAzRsvq3+CxSwaPJvQ9yC401yJlle9OuWWHgBKSaKMcjiS+h7sOsEtmKiyUg==}
+    engines: {node: '>=6.8.1'}
+    dependencies:
+      debug: 3.2.7
+      node-ensure: 0.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
     dev: false
@@ -564,16 +574,6 @@ packages:
       onnx-proto: 4.0.4
       onnxruntime-common: 1.14.0
       platform: 1.3.6
-    dev: false
-
-  /pdf-parse@1.1.1:
-    resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
-    engines: {node: '>=6.8.1'}
-    dependencies:
-      debug: 3.2.7
-      node-ensure: 0.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /platform@1.3.6:
